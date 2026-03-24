@@ -1,7 +1,8 @@
 import './App.css'
-import useOnlineStatus from './hooks/useOnlineStatus';
-import InstallPrompt from './InstallPrompt';
-import Offline from './Offline';
+import useOnlineStatus from '../../hooks/useOnlineStatus';
+import InstallPrompt from '../InstallPrompt/InstallPrompt';
+import Offline from '../Offline/Offline';
+import { PushNotification } from '../PushNotification/PushNotification';
 
 function App() {
   const isOnline = useOnlineStatus();
@@ -34,6 +35,7 @@ function App() {
           {/* Add the rest of your app content here */}
         </>
       )}
+      <PushNotification />
       <InstallPrompt />
     </div>
   );
