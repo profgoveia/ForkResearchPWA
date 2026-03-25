@@ -47,7 +47,7 @@ export function usePushNotifications(): UsePushNotificationsReturn {
         // Envie `sub.toJSON()` ao seu backend aqui
         console.log('Subscription para enviar ao backend:', JSON.stringify(sub));
         const response = await fetch(
-          'https://qxvsmsiuwxofqngbizid.supabase.co/functions/v1/send-notification',
+          `https://qxvsmsiuwxofqngbizid.supabase.co/functions/v1/send-notification`,
           {
             method: 'POST',
             headers: {
@@ -63,6 +63,12 @@ export function usePushNotifications(): UsePushNotificationsReturn {
 
         const data = await response.json();
         console.log(data);
+      }else{
+         alert(
+          'Não foi possível ativar as notificações. ' +
+          'Verifique se as notificações do Chrome estão habilitadas ' +
+          'em Configurações do sistema.'
+        );
       }
 
       return sub;

@@ -10,6 +10,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 
 // ─── Push handler ───────────────────────────────────────────
 self.addEventListener('push', (event: any) => {
+  console.log(event.data)
   const data = event.data?.json() ?? {
     title: 'Nova notificação',
     body: 'Você tem uma nova mensagem.',
@@ -19,8 +20,8 @@ self.addEventListener('push', (event: any) => {
   event.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
-      icon: data.icon ?? '/icons/icon-192x192.png',
-      badge: data.badge ?? '/icons/badge-72x72.png',
+      icon: data.icon ?? '/launchericon-192x192.png',
+      badge: data.badge ?? '/badge-72x72.png',
       data: data.url ? { url: data.url } : undefined,
     })
   );

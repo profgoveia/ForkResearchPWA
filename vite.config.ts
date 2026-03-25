@@ -10,7 +10,7 @@ export default defineConfig({
     VitePWA({
       strategies: 'injectManifest',
       srcDir: 'src',
-      filename: 'sw.js', // Your custom service worker file
+      filename: 'sw.ts', // Your custom service worker file
       registerType: 'autoUpdate',  // Automatically update Service Worker
       workbox: {
         // Workbox is Google's Service Worker library
