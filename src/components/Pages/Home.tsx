@@ -21,6 +21,7 @@ export default function Home() {
       const response = await fetch(`${config.table}/threads`, {
         headers: {
           apikey: import.meta.env.VITE_SUPABASE_API_KEY,
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`
         },
       });
       if (!response.ok) {
@@ -44,6 +45,7 @@ export default function Home() {
           method: "DELETE",
           headers: {
             apikey: import.meta.env.VITE_SUPABASE_API_KEY,
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
           },
         });
         if (!response.ok) {

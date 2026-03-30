@@ -1,3 +1,4 @@
+import { Alert, Button } from "antd";
 import { usePushNotifications } from "../../hooks/usePushNotifications";
 
 export function PushNotification() {
@@ -5,33 +6,34 @@ export function PushNotification() {
     usePushNotifications();
 
   if (!isSupported) {
-    return <p>Push notifications não são suportadas neste navegador.</p>;
+    return <Alert title="Push notifications não são suportadas neste navegador." type="warning" showIcon />;
   }
 
   if (permission === 'denied') {
     return (
-      <p>
-        Notificações bloqueadas. Habilite nas configurações do navegador.
-      </p>
+      <Alert title="Notificações bloqueadas. Habilite nas configurações do navegador." type="warning" showIcon />
     );
   }
 
   return (
     <div>
       {subscription ? (
-        <>
-          <p>✅ Notificações push ativadas.</p>
-          <button onClick={unsubscribe} disabled={isLoading}>
+        <Alert 
+          title="Notificações push ativadas!" 
+          type="success" 
+          action={<Button size="small" type="primary" ghost onClick={unsubscribe} disabled={isLoading}>
             {isLoading ? 'Desativando...' : 'Desativar notificações'}
-          </button>
-        </>
-      ) : (
-        <>
-          <p>🔔 Receba notificações desta aplicação.</p>
-          <button onClick={subscribe} disabled={isLoading}>
+          </Button>}
+          showIcon 
+          />
+      ) : (<Alert 
+          title="Receba notificações desta aplicação." 
+          type="success" 
+          action={<Button size="small" type="dashed" onClick={subscribe} disabled={isLoading}>
             {isLoading ? 'Ativando...' : 'Ativar notificações'}
-          </button>
-        </>
+          </Button>}
+          showIcon 
+          />
       )}
     </div>
   );

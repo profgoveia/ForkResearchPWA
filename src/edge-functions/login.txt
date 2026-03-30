@@ -1,0 +1,82 @@
+// supabase/functions/login/index.ts
+
+import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { SignJWT } from "https://esm.sh/jose@4.14.4";
+
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
+const JWT_SECRET = Deno.env.get("JWT_SECRET")!;
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+};
+
+
+serve(async (req) => {
+
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  try {
+    if (req.method !== "POST") {
+      return new Response(JSON.stringify({ error: "Método não permitido" }), {
+        status: 405,
+        headers: corsHeaders
+      });
+    }
+
+    const { email, senha } = await req.json();
+
+    if (!email || !senha) {
+      return new Response(
+        JSON.stringify({ error: "Email e senha são obrigatórios" }),
+        { 
+          status: 400,
+          headers: corsHeaders
+        }
+      );
+    }
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password: senha,
+    });
+
+    if (error || !data.user) {
+      return new Response(
+        JSON.stringify({ error: "Credenciais inválidas" }),
+        { status: 401, headers: corsHeaders }
+      );
+    }
+
+    const user = data.user;
+
+    const auth = await supabase.auth.signInWithPassword({
+      email,
+      password: senha,
+    });
+
+    return new Response(
+      JSON.stringify({
+        message: "Login realizado com sucesso",
+        jwt: auth.data.session.access_token,
+        user: {
+          id: user.id,
+          email: user.email,
+        },
+      }),
+      { status: 200, headers: corsHeaders }
+    );
+  } catch (err) {
+    return new Response(
+      JSON.stringify({ error: "Erro interno", details: err.message }),
+      { status: 500, headers: corsHeaders }
+    );
+  }
+});

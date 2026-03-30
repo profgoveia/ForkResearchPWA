@@ -8,6 +8,7 @@ import NavBar from "../Layout/NavBar";
 import TitleBar from "../Layout/TitleBar";
 import Cadastro from "../Pages/Cadastro";
 import Home from "../Pages/Home";
+import Login from "../Pages/Login"
 
 function App() {
   const isOnline = useOnlineStatus();
@@ -16,32 +17,16 @@ function App() {
         <ConfigProvider theme={{ token: { colorPrimary: "#1677ff" } }}>
       <BrowserRouter>
     <div className="App">
-      {/* Online status banner */}
-      {!isOnline && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          width: '100%',
-          backgroundColor: '#ff6b6b',
-          color: 'white',
-          padding: '10px',
-          textAlign: 'center',
-          zIndex: 1000
-        }}>
-          ⚠️ You are currently offline
-        </div>
-      )}
-      
-      {/* Show Offline component when offline */}
-      {!isOnline ? (
-        <Offline />
-      ) : (
-        <div className="main">
-          <PushNotification />
+      <div className="main">
           <TitleBar />
+          <div style={{padding:8}}>
+            <PushNotification />
+            {!isOnline && <Offline />}
+          </div>
           <Routes>
             {/* SUAS ROTAS VÊM AQUI */}
             <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/cadastro" element={<Cadastro />} />
             <Route
               path="*"
@@ -50,7 +35,6 @@ function App() {
           </Routes>
           <NavBar />
         </div>
-      )}
       <InstallPrompt />
     </div>
     </BrowserRouter>

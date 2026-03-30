@@ -30,7 +30,11 @@ export default function Cadastro() {
   async function getData() {
     try {
       setLoading(true);
-      const response = await fetch(`${config.edge}/list_threads_and_types`, {});
+      const response = await fetch(`${config.edge}/list_threads_and_types`, {
+        headers:{
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`
+        }
+      });
       if (!response.ok) {
         throw new Error(`Erro ${response.status}`);
       }
@@ -48,7 +52,7 @@ export default function Cadastro() {
     try {
       setLoading(true);
       const data = {
-        owner_id: "6f7ca60d-d4db-4b84-a6be-800fa03f974a",
+        owner_id: localStorage.getItem("user_id"),
         ...values,
         parent_id: values.parent_id == "" ? null : values.parent_id,
       };
@@ -57,6 +61,8 @@ export default function Cadastro() {
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_API_KEY,
+          Authorization: `Bearer ${localStorage.getItem("jwt")}`
         },
       });
       if (!response.ok) {
